@@ -32,11 +32,11 @@ def evaluate_cognition(patient_name, mmse, moca, walk_time, education, age, gend
 
     # 3. MoCA判断
     is_mci = False
-    if education in low_edu and moca < 18:
+    if education in low_edu and moca <= 18:
         is_mci = True
-    elif education in mid_edu and moca < 21:
+    elif education in mid_edu and moca <= 21:
         is_mci = True
-    elif education in high_edu and moca < 23:
+    elif education in high_edu and moca <= 23:
         is_mci = True
 
     # 计算步速（保留两位小数）
