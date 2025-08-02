@@ -32,14 +32,14 @@ def evaluate_cognition(patient_name, mmse, moca, walk_time, education, age, gend
 
     # 3. MoCA判断
     is_mci = False
-    if education in low_edu and moca <= 18:
+    if education in low_edu and moca < 18:
         is_mci = True
-    elif education in mid_edu and moca <= 21:
+    elif education in mid_edu and moca < 21:
         is_mci = True
-    elif education in high_edu and moca <= 23:
+    elif education in high_edu and moca < 23:
         is_mci = True
 
-    # 计算步速
+    # 计算步速（保留两位小数）
     gait_speed = round(4 / walk_time, 2) if walk_time > 0 else 0.00
 
     # 定义步速临界值
@@ -112,7 +112,15 @@ def main():
         with col2:
             moca = st.number_input("MoCA得分 (0-30)", min_value=0, max_value=30, step=1)
 
-        walk_time = st.number_input("4米步行时间 (秒)", min_value=0.1, step=0.1, format="%.1f", value=None, placeholder="输入时间")
+        # 修改：步行时间输入框默认值为None（显示为空）
+        walk_time = st.number_input(
+            "4米步行时间 (秒)",
+            min_value=0.1,
+            step=0.1,
+            format="%.1f",
+            value=None,  # 设置默认值为None，显示为空
+            placeholder="输入时间（秒）"
+        )
 
         col3, col4 = st.columns(2)
         with col3:
@@ -126,6 +134,14 @@ def main():
         submitted = st.form_submit_button("开始评估")
 
     if submitted:
+        # 检查步行时间是否已输入
+        if walk_time is None:
+            st.error("请输入4米步行时间")
+            return
+        if walk_time <= 0:
+            st.error("步行时间必须大于0")
+            return
+
         # 执行评估
         result, gait_speed = evaluate_cognition(
             patient_name, mmse, moca, walk_time, education, age, gender
@@ -179,7 +195,7 @@ def main():
             cols[4].write(row['受教育程度'])
             cols[5].write(row['年龄'])
             cols[6].write(row['性别'])
-            cols[7].write(row['步速(m/s)'])
+            cols[7].write(row['步速(m/s)'])  # 这里已经是两位小数的字符串
             cols[8].write(row['评估时间'])
 
             # 显示评估结果（带颜色）
