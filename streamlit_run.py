@@ -117,7 +117,7 @@ def main():
             "4米步行时间 (秒)",
             min_value=0.1,
             step=0.1,
-            format="%.1f",
+            format="%.2f",
             value=None,  # 设置默认值为None，显示为空
             placeholder="输入时间（秒）"
         )
